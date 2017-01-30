@@ -43,9 +43,9 @@ Sequence.prototype.getHeader = function(){
 	var buffer = Buffer.alloc(constants.FILE_HEADER_LENGTH);
 	buffer.writeUInt32BE(constants.START_OF_FILE, 0);
 	buffer.writeUInt32BE(6, 4);	// number of bytes after header
-	buffer.readUInt16BE(this.header.fileType, 8);
-	buffer.readUInt16BE(this.header.noTracks, 10);
-	buffer.readUInt16BE(this.header.ticks, 12);
+	buffer.writeUInt16BE(this.header.fileType, 8);
+	buffer.writeUInt16BE(this.header.noTracks, 10);
+	buffer.writeUInt16BE(this.header.ticks, 12);
 	return buffer;
 }
 
