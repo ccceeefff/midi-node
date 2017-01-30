@@ -2,6 +2,7 @@
 
 var Message = require('./message');
 var constants = require('./constants');
+var vlv = require('./vlv');
 
 function Track(params) {
 	this.size = params.size;
