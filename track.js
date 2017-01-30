@@ -1,10 +1,7 @@
 'use strict';
 
 var Message = require('./message');
-
-var constants = {
-	START_OF_TRACK: 0x4d54726b
-};
+var constants = require('./constants');
 
 function Track(params) {
 	this.size = params.size;
@@ -62,6 +59,31 @@ Track.fromBuffer = function (buffer) {
 	var size = buffer.readUInt32BE(offset);
 
 	return new Track({size: size});
+};
+
+/**
+ * Writes the entire track out into a buffer
+ *
+ * @returns {Buffer}
+ */
+Track.prototype.toBuffer = function(){
+     var buffer = Buffer.alloc(constants.TRACK_HEADER_LENGTH);
+     buffer.writeInt32BE(constants.START_OF_TRACK, 0);
+     var size = this.size;
+     if (!size) {
+          size = 0;
+     }
+     buffer.writeInt32BE(size, 4);
+
+     this.events.forEach(function(event){
+          buffer = Buffer.concat([
+               buffer,
+               vlv.toBuffer(event.delta),
+               new Buffer([event.message.statusByte]),
+               new Buffer(event.message.data)
+          ]);
+     });
+     return buffer;
 };
 
 module.exports = Track;
