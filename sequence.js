@@ -3,10 +3,7 @@
 var Message = require('./message');
 var Track = require('./track');
 var vlv = require('./vlv');
-
-var constants = {
-	START_OF_FILE: 0x4d546864 // MThd
-};
+var constants = require('./constants');
 
 var fileTypes = {
 	TYPE_0: 0x0, // single track
@@ -36,6 +33,21 @@ Sequence.prototype.getFileType = function () {
 Sequence.prototype.getTicks = function () {
 	return this.header.ticks;
 };
+
+/**
+ * Generates a buffer containing the MIDI File header based on this sequence
+ *
+ * @return {Buffer}
+ */
+Sequence.prototype.getHeader = function(){
+	var buffer = Buffer.alloc(constants.FILE_HEADER_LENGTH);
+	buffer.writeUInt32BE(constants.START_OF_FILE, 0);
+	buffer.writeUInt32BE(6, 4);	// number of bytes after header
+	buffer.readUInt16BE(this.header.fileType, 8);
+	buffer.readUInt16BE(this.header.noTracks, 10);
+	buffer.readUInt16BE(this.header.ticks, 12);
+	return buffer;
+}
 
 /**
  *
