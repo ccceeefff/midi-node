@@ -34,6 +34,10 @@ var commands = {
 	0xFF: {
 		name: 'META_MESSAGE',
 		length: null // variable
+	},
+	0xF0: {
+		name: 'SYS_MESSAGE',
+		length: null // variable
 	}
 };
 
